@@ -135,7 +135,15 @@ void orapp_select_straight(ORAPP::Connection &db) {
     ORAPP::Row *r;
 
     while ((r = q->fetch())) {
-        printf("::: rows fetched = %u\n", q->rows());
+        printf("::: rows fetched = %u, width = %u\n", q->rows(), r->width());
+
+        unsigned i;
+        for (i = 0; i < r->width(); i++)
+            printf(":::    row%u named %s\n", i, r->name(i));
+
+        i = 42;
+        printf(":::    row%u named %s (should be NULL)\n", i, r->name(i));
+
         printf(":::    (name) id = %u, str = [%s], unknown = [%s]\n",
                (unsigned)(*r)["id"], (const char *)(*r)["str"], (const char *)(*r)["unknown"]);
         printf(":::    (row)  id = %u, str = [%s], unknown = [%s]\n",
