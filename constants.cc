@@ -6,5 +6,5 @@
 
 
 namespace ORAPP {
-    const char *VERSION = "2.0.3";
+    const char *VERSION = "2.0.4-cvs";
 };
