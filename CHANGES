@@ -1,0 +1,32 @@
+
+v2.0.2   1/21/04    Add more compilation targets.
+
+    1. Added ``stdio.h'' include to ``query.cc'', in order to get at
+       the ``vsnprintf()'' declaration in GCC 2.9x.
+
+    2. Converted all instances of ``std::string::clear()'' to instead
+       assign an empty string.  While they accomplish the same,
+       apparently the API-complete ``std::string::clear()'' was not
+       yet implemented in GCC 2.9x.
+
+    3. Updated ``DESIGN'' document, advising on one more issue those
+       converting from ORA++ will experience.
+
+    4. Updated ``Makefile'', removing ``-O2''.  For some odd reason,
+       *only* under RedHat's GCC 2.96 (shipped with RedHat 7.2) the
+       library and resulting test program segfault quickly *only* when
+       optimized.
+
+       As GCC 2.96 has been deprecated even by RedHat themselves,
+       those using other compiler toolchains (including GCC 3.x, and
+       possibly 2.95.x) who think the optimizations may provide
+       additional value should re-enable them by uncommenting the
+       relevant portion of ``GEN_FLAGS'' at the top of the Makefile.
+
+    5. Minor update to the test program to add a small set of extra
+       things to "test".
+
+
+v2.0.1   12/13/03   Initial release.
+
+
