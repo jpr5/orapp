@@ -39,6 +39,7 @@ Row::~Row(void) {
  */
 
 bool Row::init(void) {
+    static const char *UNKNOWN = "unknown field";
     ub4 count, countsz = sizeof(count);
 
     _errno = OCIAttrGet(_stmt, OCI_HTYPE_STMT, &count, &countsz, OCI_ATTR_PARAM_COUNT, _err);
@@ -55,7 +56,7 @@ bool Row::init(void) {
      */
 
     if (!EMPTY)
-        EMPTY = new Field("unknown field", 1, _errno);
+        EMPTY = new Field(UNKNOWN, strlen(UNKNOWN), 1, _errno);
 
     /*
      * We know how many fields/columns there are now, so let's process
@@ -115,7 +116,7 @@ bool Row::init(void) {
          * functions.
          */
 
-        f = new Field(name, width, _errno);
+        f = new Field(name, name_len, width, _errno);
 
         _errno = OCIDefineByPos(_stmt, &f->ocidefine, _err, i+1, f->value, width, SQLT_STR, &f->isnull, &len, &rcode, OCI_DEFAULT);
         if (!ORAPP_SUCCESS(_errno)) {
