@@ -79,6 +79,7 @@ bool orapp_disconnect(ORAPP::Connection &db) {
 bool orapp_setup(ORAPP::Connection &db) {
     ORAPP::Query *q = db.query();
 
+    printf("    (SAFE TO IGNORE ERRORS ABOUT MISSING OBJECTS)\n");
     printf("*** setting up test_TABLE\n");
 
     if (!q->execute(trigger_DROP))
@@ -459,6 +460,16 @@ int usage(const char *argv) {
     return 1;
 }
 
+void give_explanation(void) {
+
+    printf(" *** \n"
+           " NOTE: The purpose of this program is to exercise the features of the \n"
+           "       ORAPP API.  If it does not terminate in error, then all tests  \n"
+           "       completed successfully.  This program will emit specific error \n"
+           "       messages if any occur.  \n");
+
+}
+
 int main(int argc, char **argv) {
     if (getenv("ORACLE_HOME") == NULL) {
         printf("error: ORACLE_HOME unset, bailing..\n");
@@ -487,6 +498,8 @@ int main(int argc, char **argv) {
     ORAPP::Connection db;
 
     printf("--- ORAPP API v%s\n", ORAPP::VERSION);
+
+    give_explanation();
 
     if (!orapp_connect(db, tns, user, pass))
         return 1;
