@@ -14,6 +14,7 @@ ORACLE_LIBS     = $(ORACLE_HOME)/lib/libclntst$(ORACLE_VERSION).a \
 GEN_FLAGS    = -g -fno-exceptions -fno-rtti -D_REENTRANT=1 # -O2
 GEN_INCLUDES =
 GEN_LIBS     = -ldl
+#GEN_LIBS    = -lnsl -lsocket -lz -ldl  # for solaris
 
 CXXFLAGS = $(ORACLE_FLAGS) $(GEN_FLAGS)
 INCLUDES = $(ORACLE_INCLUDES) $(GEN_INCLUDES) 
