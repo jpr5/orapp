@@ -3,6 +3,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
 
@@ -94,8 +95,8 @@ bool Query::rollback(void) {
 }
 
 bool Query::clear(void) {
-    SQL.clear();
-    nextSQL.clear();
+    SQL     = "";
+    nextSQL = "";
     return reset();
 }
 
@@ -140,7 +141,7 @@ bool Query::reset(void) {
     }
     _binds.clear();
 
-    SQL.clear();
+    SQL = "";
 
     return true;
 }
@@ -162,7 +163,7 @@ bool Query::prepare(void) {
     }
 
     SQL = nextSQL.c_str();
-    nextSQL.clear();
+    nextSQL = "";
 
     _errno = OCIStmtPrepare(_stmt, _err, (unsigned char *)SQL.c_str(), (ub4)SQL.length(), OCI_NTV_SYNTAX, OCI_DEFAULT);
     if (!ORAPP_SUCCESS(_errno)) {
