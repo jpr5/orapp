@@ -120,7 +120,7 @@ Noteworthy Changes
 
        3. The Query object works a bit differently than before; it
          doesn't keep a state anymore, is much better at catching
-         errors (esp. in the new error paradigm as described in #1),
+         errors (esp. in the new error paradigm as described in #2),
          has a few more really useful methods for stuffing SQL queries
          into the Query object (think: format strings), and
          contemplates being parallizable in various places.
