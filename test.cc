@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include <unistd.h>
 
 extern "C" {
 #include <oci.h>
@@ -79,8 +80,7 @@ bool orapp_disconnect(ORAPP::Connection &db) {
 bool orapp_setup(ORAPP::Connection &db) {
     ORAPP::Query *q = db.query();
 
-    printf("    (SAFE TO IGNORE ERRORS ABOUT MISSING OBJECTS)\n");
-    printf("*** setting up test_TABLE\n");
+    printf("*** setting up test_TABLE (SAFE TO IGNORE ERRORS ABOUT MISSING OBJECTS)\n");
 
     if (!q->execute(trigger_DROP))
         printf("   >>> (orapp_setup) %s [%s]\n", db.error().c_str(), q->statement());
@@ -462,11 +462,16 @@ int usage(const char *argv) {
 
 void give_explanation(void) {
 
-    printf(" *** \n"
+    printf("\n"
+           " *** \n"
            " NOTE: The purpose of this program is to exercise the features of the \n"
            "       ORAPP API.  If it does not terminate in error, then all tests  \n"
            "       completed successfully.  This program will emit specific error \n"
-           "       messages if any occur.  \n");
+           "       messages if any occur.  \n"
+           " *** \n"
+           "\n");
+
+    sleep(5);
 
 }
 
@@ -494,12 +499,12 @@ int main(int argc, char **argv) {
         return usage(argv[0]);
     }
 
+    give_explanation();
+
     ORAPP::log_to(logfunc);
     ORAPP::Connection db;
 
     printf("--- ORAPP API v%s\n", ORAPP::VERSION);
-
-    give_explanation();
 
     if (!orapp_connect(db, tns, user, pass))
         return 1;
