@@ -11,7 +11,7 @@ ORACLE_INCLUDES = -I$(ORACLE_HOME)/rdbms/demo -I$(ORACLE_HOME)/rdbms/public
 ORACLE_LIBS     = $(ORACLE_HOME)/lib/libclntst$(ORACLE_VERSION).a \
 	          $(ORACLE_HOME)/lib/libwtc$(ORACLE_VERSION).a
 
-GEN_FLAGS    = -O2 -g -fno-exceptions -fno-rtti -D_REENTRANT=1
+GEN_FLAGS    = -g -fno-exceptions -fno-rtti -D_REENTRANT=1 # -O2
 GEN_INCLUDES =
 GEN_LIBS     = -ldl
 
