@@ -100,21 +100,7 @@ bool Query::clear(void) {
     return reset();
 }
 
-/*
- * Apparently in the case of a SELECT statement/cursor, fetching 0
- * rows will reset the cursor.  I have to believe there is a
- * simpler/less kludgy way to accomplish a cursor reset.
- */
-
 bool Query::reset(void) {
-    if (_stmt && _type == OCI_STMT_SELECT) {
-        _errno = OCIStmtFetch(_stmt, _err, 0, OCI_FETCH_NEXT, OCI_DEFAULT);
-        if (!ORAPP_SUCCESS(_errno)) {
-            _log("OCIStmtFetch(reset) failed");
-            return false;
-        }
-    }
-
     if (_row) {
         delete _row;
         _row = NULL;
@@ -132,8 +118,21 @@ bool Query::reset(void) {
 
     _binds.clear();
 
-
     SQL = "";
+
+    /*
+     * Apparently in the case of a SELECT statement/cursor, fetching 0
+     * rows will reset the cursor.  I have to believe there is a
+     * simpler/less kludgy way to accomplish a cursor reset.
+     */
+
+    if (_stmt && _type == OCI_STMT_SELECT) {
+        _errno = OCIStmtFetch(_stmt, _err, 0, OCI_FETCH_NEXT, OCI_DEFAULT);
+        if (!ORAPP_SUCCESS(_errno)) {
+            _log("OCIStmtFetch(reset) failed");
+            return false;
+        }
+    }
 
     return true;
 }
@@ -154,7 +153,7 @@ bool Query::prepare(void) {
         return false;
     }
 
-    SQL = nextSQL.c_str();
+    SQL     = nextSQL.c_str();
     nextSQL = "";
 
     _errno = OCIStmtPrepare(_stmt, _err, (unsigned char *)SQL.c_str(), (ub4)SQL.length(), OCI_NTV_SYNTAX, OCI_DEFAULT);
@@ -204,15 +203,6 @@ bool Query::execute(void) {
     _errno = OCIStmtExecute(_svc, _stmt, _err, (ub4)(_type != OCI_STMT_SELECT), 0, NULL, NULL, _execmode);
 
     /*
-     * Catch-all for any subsequent calls to bind() before ever
-     * calling execute() again (the latter of which guarantees
-     * preparation occurs because it calls reset()). Reset _prepared
-     * for any condition, failure or success.
-     */
-
-    _prepared = false;
-
-    /*
      * If successful, then we don't need to do anything since Row's
      * are created on demand and cached by the fetch() method.
      */
@@ -258,7 +248,7 @@ bool Query::execute(void) {
 }
 
 bool Query::execute(const char *s) {
-    nextSQL = s;
+    *this = s;
     return execute();
 }
 
@@ -453,34 +443,59 @@ bool Query::bind(const char *name, void *addr, unsigned width, ub2 type) {
  **/
 
 Query& Query::operator<<(const char *s) {
-    nextSQL += s;
+    _prepared = false;
+    nextSQL.append(s);
     return *this;
 }
 
 Query& Query::operator<<(const unsigned char *s) {
-    nextSQL += (const char *)s;
+    _prepared = false;
+    nextSQL.append((const char *)s);
     return *this;
 }
 
 Query& Query::operator<<(const signed char *s) {
-    nextSQL += (const char *)s;
+    _prepared = false;
+    nextSQL.append((const char *)s);
     return *this;
 }
 
 Query& Query::operator<<(char c) {
+    _prepared = false;
     nextSQL += c;
     return *this;
 }
 
 Query& Query::operator<<(unsigned char c) {
+    _prepared = false;
     nextSQL += c;
     return *this;
 }
 
 Query& Query::operator<<(signed char c) {
+    _prepared = false;
     nextSQL += c;
     return *this;
 }
+
+Query& Query::operator=(const char *s) {
+    _prepared = false;
+    nextSQL.assign(s);
+    return *this;
+}
+
+Query& Query::operator=(const unsigned char *s) {
+    _prepared = false;
+    nextSQL.assign((const char *)s);
+    return *this;
+}
+
+Query& Query::operator=(const signed char *s) {
+    _prepared = false;
+    nextSQL.assign((const char *)s);
+    return *this;
+}
+
 
 /*
  * An oldie but a goodie: formatstr's for putting together queries
@@ -499,7 +514,7 @@ void Query::assign(const char *format, ...) {
     vsnprintf(buf, sizeof(buf)-1, format, args);
     va_end(args);
 
-    nextSQL.assign(buf);
+    *this = buf;
 }
 
 void Query::append(const char *format, ...) {
@@ -511,6 +526,6 @@ void Query::append(const char *format, ...) {
     vsnprintf(buf, sizeof(buf)-1, format, args);
     va_end(args);
 
-    nextSQL.append(buf);
+    *this << buf;
 }
 

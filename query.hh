@@ -110,6 +110,10 @@ public:
     Query& operator<<(unsigned char);
     Query& operator<<(signed char);
 
+    Query& operator=(const char *);
+    Query& operator=(const unsigned char *);
+    Query& operator=(const signed char *);
+
     /*
      * And finally, some very useful methods for putting together
      * queries using uncommon types not covered by above's stream
