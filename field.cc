@@ -14,10 +14,10 @@ extern "C" {
 using namespace ORAPP;
 
 
-Field::Field(const char *n, unsigned w, signed &errno_) : _errno(errno_) {
+Field::Field(const char n[], unsigned l, unsigned w, signed &errno_) : _errno(errno_) {
     ocidefine = NULL;
 
-    name  = n;
+    name.assign(n, l);
     width = w;
 
     value = new char [width];

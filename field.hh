@@ -27,7 +27,7 @@ protected:
     char *value;
     sb2 isnull;
 
-    Field(const char *, unsigned width, signed &);
+    Field(const char [], unsigned, unsigned width, signed &);
     ~Field(void);
 
     bool init(unsigned pos);
