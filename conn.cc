@@ -165,10 +165,6 @@ const std::string &Connection::version(void) {
  * many more, and this would be the once place to change the logic and
  * dole them out, perhaps limiting the total number, how many are left
  * around, etc.
- *
- * NOTE: if parallelized, the _errno logic will need to be separated
- * and each Query object get its own _errno (and possibly _err)
- * handle.  Ask jdb about this.
  */
 
 ORAPP::Query *Connection::query(void) {
