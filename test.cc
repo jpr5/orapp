@@ -399,25 +399,25 @@ void orapp_insert_bind(ORAPP::Connection &db) {
     printf("*** executing INSERT: %s\n", q->statement());
 
     char *buf1 = "ooga";
+    char *buf2 = "booga";
 
     q->bind(":str", buf1);
 
-    if (!q->execute())
-        printf("   >>> (insert failed) %s\n", db.error().c_str());
-
-    printf("*** executing INSERT: %s\n", q->statement());
-
-    char *buf2 = "booga";
-
-    *q << "INSERT INTO test_TABLE (str) VALUES (:str)";
+    for (unsigned i = 0; i < 2; i++)
+        if (!q->execute())
+            printf("   >>> (insert failed) %s\n", db.error().c_str());
 
     q->bind(":str", buf2);
 
-    if (!q->execute())
-        printf("   >>> (insert failed) %s\n", db.error().c_str());
+    for (unsigned i = 0; i < 2; i++)
+        if (!q->execute())
+            printf("   >>> (insert failed) %s\n", db.error().c_str());
+
+    orapp_select_straight(db);
 
     printf("*** done\n");
 }
+
 
 void orapp_feature_assign(ORAPP::Connection &db) {
     ORAPP::Query *q = db.query();
@@ -471,8 +471,7 @@ void give_explanation(void) {
            " *** \n"
            "\n");
 
-    sleep(5);
-
+    sleep(3);
 }
 
 int main(int argc, char **argv) {
