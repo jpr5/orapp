@@ -177,13 +177,17 @@ int Row::position(const char *name) {
 }
 
 const char *Row::name(unsigned position) {
-    Field *f = _columns[position];
-    return f ? f->name.c_str() : NULL;
+    if (position+1 > _columns.size())
+        return NULL;
+
+    return _columns[position]->name.c_str();
 }
 
 bool Row::isnull(unsigned position) {
-    Field *f = _columns[position];
-    return f ? f->isnull : true;
+    if (position+1 > _columns.size())
+        return true;
+
+    return _columns[position]->name.c_str();
 }
 
 Field& Row::operator[](unsigned position) {
