@@ -20,13 +20,13 @@ Field::Field(const char n[], unsigned l, unsigned w, signed &errno_) : _errno(er
     name.assign(n, l);
     width = w;
 
-    value = new char [width];
+    value = (void*)new char [width];
     memset(value, 0, width);
 }
 
 Field::~Field(void) {
     if (value)
-        delete[] value;
+        delete[] (char*)value;
 
     /*
      * No need to OCIHandleFree the ``ocidefine''; according to Oracle
@@ -37,31 +37,31 @@ Field::~Field(void) {
 }
 
 Field::operator char(void) {
-    return value[0];
+    return ((char*)value)[0];
 }
 
 Field::operator char *(void) {
-    return value;
+    return (char*)value;
 }
 
 Field::operator const char *(void) {
-    return value;
+    return (const char *)value;
 }
 
 Field::operator int(void) {
-    return strtol(value, NULL, 10);
+    return strtol((char*)value, NULL, 10);
 }
 
 Field::operator unsigned(void) {
-    return strtoul(value, NULL, 10);
+    return strtoul((char*)value, NULL, 10);
 }
 
 Field::operator long(void) {
-    return strtol(value, NULL, 10);
+    return strtol((char*)value, NULL, 10);
 }
 
 Field::operator unsigned long(void) {
-    return strtoul(value, NULL, 10);
+    return strtoul((char*)value, NULL, 10);
 }
 
 

@@ -24,7 +24,7 @@ protected:
     OCIDefine *ocidefine;
 
     unsigned width;
-    char *value;
+    void *value;
     sb2 isnull;
 
     Field(const char [], unsigned, unsigned width, signed &);
