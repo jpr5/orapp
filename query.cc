@@ -124,22 +124,14 @@ bool Query::reset(void) {
     _prepared = false;
 
     /*
-     * The following code to free any bindings seems to return an
-     * error every single time, saying 'ORA-01403: no data found
-     * (OCI_ERROR)'.  It is not clear why, or how to fix it, but it
-     * should be noted that the previous incarnation (ora++) suffered
-     * from the same exact error, and wasn't catching it (either by
-     * ignorance or specific ommission, that too is unclear).
+     * No need to OCIHandleFree our OCIBind's; according to Oracle 8i,
+     * 9i, and 10g documentation OCI_HTYPE_BIND is not a valid input
+     * into OCIHandleFree and thus the implication is that it is not
+     * needed.
      */
 
-    bindlist_t::iterator i;
-    for (i = _binds.begin(); i != _binds.end(); ++i) {
-        _errno = OCIHandleFree((*i), OCI_HTYPE_BIND);
-
-        if (!ORAPP_SUCCESS(_errno))
-            ;//_log("OCIHandleFree(OCI_HTYPE_BIND) failed during reset");
-    }
     _binds.clear();
+
 
     SQL = "";
 

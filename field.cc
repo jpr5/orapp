@@ -28,22 +28,12 @@ Field::~Field(void) {
     if (value)
         delete[] value;
 
-    if (ocidefine) {
-        _errno = OCIHandleFree(ocidefine, OCI_HTYPE_DEFINE);
-
-        /*
-         * FIXME: The previous incarnation of this didn't check the
-         * error, but in testing it appears that this happens some of
-         * the time, but not all of the time.  Oracle probably
-         * releases these things on its own when other handles upon
-         * which these DEFINEs depend are released.  So, for now we'll
-         * disable this.
-
-         if (!ORAPP_SUCCESS(_errno))
-            _log("OCIHandleFree(OCI_HTYPE_DEFINE) for %s failed", name.c_str());
-
-        */
-    }
+    /*
+     * No need to OCIHandleFree the ``ocidefine''; according to Oracle
+     * 8i, 9i, and 10g documentation OCI_HTYPE_DEFINE is not a valid
+     * input into OCIHandleFree and thus the implication is that it
+     * is not needed.
+     */
 }
 
 Field::operator char(void) {
