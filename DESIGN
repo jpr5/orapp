@@ -233,5 +233,14 @@ Converting between ORA++ and ORAPP
             fields without deallocating them (efficiency optimization
             when reusing a Row multiple times).
 
+      6. Must call ORAPP::Query::execute() before ORAPP::Query::fetch().
+
+        The previous implementation (ORA++) allowed the caller to set
+        the query string and then immediately call ``fetch()''.  This
+        however made it difficult to distinguish between a bad query
+        (``execute()''), an API error during fetch, and no data
+        present to fetch from the DB.  Now ``execute()'' must always
+        be called preceding a ``fetch()'', providing cleaner and
+        clearer granularity of error detection.
 
 __END__
