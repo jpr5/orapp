@@ -187,7 +187,7 @@ bool Row::isnull(unsigned position) {
     if (position+1 > _columns.size())
         return true;
 
-    return _columns[position]->name.c_str();
+    return _columns[position]->isnull;
 }
 
 Field& Row::operator[](unsigned position) {
